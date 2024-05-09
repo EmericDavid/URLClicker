@@ -23,10 +23,9 @@ local PATTERNS = {
 }
 
 local function formatURL(url)
-    url = "|cff".."18f24b".."|Hurl:"..url.."|h"..url.."|h|r ";
-    return url;
+    url = "|cff".."18f24b".."|Hurl:"..url.."|h"..url.."|h|r "
+    return url
 end
-
 
 local function makeClickable(self, event, msg, ...)    
     for k,p in pairs(PATTERNS) do
@@ -35,38 +34,54 @@ local function makeClickable(self, event, msg, ...)
             return false, msg, ...
         end
     end
-    
     return false, msg, ...
 end
 
-StaticPopupDialogs["Click_URL_Clicker"] = {
-    text = "CTRL + C to copy the link !",
-    button1 = "Close",
-    OnAccept = function()
-    end,
-    timeout = 0,
-    whileDead = true,
-    hideOnEscape = true,
-    preferredIndex = 3, 
-    OnShow = 
-        function (self, data)
-            self.editBox:SetText(data.url)
-            self.editBox:HighlightText()
-        end,
-    hasEditBox = true
-}
+-- Create the URLClickerBox
+local URLClickerBox = CreateFrame("Frame", "URLClickerBox", UIParent, "DialogBoxFrame")
+URLClickerBox:SetSize(500, 150)
+URLClickerBox:SetPoint("CENTER")
+URLClickerBox:SetBackdrop({
+    bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background",
+    edgeFile = "Interface\\PVPFrame\\UI-Character-PVP-Highlight",
+    edgeSize = 16,
+    insets = { left = 8, right = 8, top = 8, bottom = 8 },
+})
+URLClickerBox:SetBackdropBorderColor(0.6, 0.6, 0.6, 0.6);
+
+URLClickerBox:SetMovable(true)
+URLClickerBox:EnableMouse(true)
+URLClickerBox:RegisterForDrag("LeftButton")
+URLClickerBox:SetScript("OnDragStart", URLClickerBox.StartMoving)
+URLClickerBox:SetScript("OnDragStop", URLClickerBox.StopMovingOrSizing)
+
+URLClickerBox.text = URLClickerBox:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+URLClickerBox.text:SetPoint("TOP", 0, -20)
+URLClickerBox.text:SetText("CTRL + C to copy the link !")
+
+URLClickerBox.editBox = CreateFrame("EditBox", nil, URLClickerBox, "InputBoxTemplate")
+URLClickerBox.editBox:SetSize(450, 50)
+URLClickerBox.editBox:SetPoint("CENTER", 0, 0)
+URLClickerBox.editBox:SetAutoFocus(true)
+URLClickerBox.editBox:SetFontObject(GameFontHighlight)
+URLClickerBox.editBox:SetScript("OnEscapePressed", function() URLClickerBox:Hide() end)
+
 
 local ChatFrame_OnHyperlinkShow_orig = ChatFrame_OnHyperlinkShow;
+
 local function URLClicker_ChatFrame_OnHyperlinkShow(frame, link, text, button)
     if (string.sub(link, 1, 3) == "url") then
-        local url = string.sub(link, 5);
+        local url = string.sub(link, 5)
         local d = {}
         d.url = url
-        StaticPopup_Show("Click_URL_Clicker", "", "", d)
+        URLClickerBox:Show()
+        URLClickerBox.editBox:SetText(d.url)
+        URLClickerBox.editBox:HighlightText()
     else
         ChatFrame_OnHyperlinkShow_orig(frame, link, text, button);
     end
 end
+
 ChatFrame_OnHyperlinkShow = URLClicker_ChatFrame_OnHyperlinkShow;
 
 local CHAT_TYPES = {

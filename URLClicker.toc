@@ -2,7 +2,7 @@
 ## Title: |cff18f24bURL Clicker|r
 ## Author: Mereci
 ## Notes: Makes URL clickable
-## Version: 1.0.1
+## Version: 1.0.2
 ## IconTexture: 4038107
 
 URLClicker.lua
