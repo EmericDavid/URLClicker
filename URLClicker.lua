@@ -66,46 +66,56 @@ URLClickerBox.editBox:SetAutoFocus(true)
 URLClickerBox.editBox:SetFontObject(GameFontHighlight)
 URLClickerBox.editBox:SetScript("OnEscapePressed", function() URLClickerBox:Hide() end)
 
-
-local ChatFrame_OnHyperlinkShow_orig = ChatFrame_OnHyperlinkShow;
-
-local function URLClicker_ChatFrame_OnHyperlinkShow(frame, link, text, button)
-    if (string.sub(link, 1, 3) == "url") then
+-- Safe hook for ChatFrame_OnHyperlinkShow
+local function URLClicker_OnHyperlinkShow(self, link, text, button)
+    if string.sub(link, 1, 3) == "url" then
         local url = string.sub(link, 5)
-        local d = {}
-        d.url = url
         URLClickerBox:Show()
-        URLClickerBox.editBox:SetText(d.url)
+        URLClickerBox.editBox:SetText(url)
         URLClickerBox.editBox:HighlightText()
-    else
-        ChatFrame_OnHyperlinkShow_orig(frame, link, text, button);
     end
 end
 
-ChatFrame_OnHyperlinkShow = URLClicker_ChatFrame_OnHyperlinkShow;
+hooksecurefunc("ChatFrame_OnHyperlinkShow", URLClicker_OnHyperlinkShow)
 
 local CHAT_TYPES = {
-    "AFK",
-    "BATTLEGROUND_LEADER",
-    "BATTLEGROUND",
-    "BN_WHISPER",
-    "BN_WHISPER_INFORM",
-    "CHANNEL",
-    "COMMUNITIES_CHANNEL",
-    "DND",
-    "EMOTE",
-    "GUILD",
-    "OFFICER",
-    "PARTY_LEADER",
+    "SYSTEM",
+    "SAY",
     "PARTY",
+    "PARTY_LEADER",
+    "RAID",
     "RAID_LEADER",
     "RAID_WARNING",
-    "RAID",
-    "SAY",
+    "GUILD",
+    "OFFICER",
+    "YELL",
     "WHISPER",
     "WHISPER_INFORM",
-    "YELL",
-    "SYSTEM"
+    "BN_WHISPER",
+    "BN_WHISPER_INFORM",
+    "REPLY",
+    "EMOTE",
+    "TEXT_EMOTE",
+    "CHANNEL",
+    "CHANNEL_NOTICE",
+    "CHANNEL_NOTICE_USER",
+    "CHANNEL1",
+    "CHANNEL2",
+    "CHANNEL3",
+    "CHANNEL4",
+    "CHANNEL5",
+    "CHANNEL6",
+    "CHANNEL7",
+    "CHANNEL8",
+    "CHANNEL9",
+    "CHANNEL10",
+    "COMMUNITIES_CHANNEL",
+    "AFK",
+    "DND",
+    "FILTERED",
+    "BATTLEGROUND",
+    "BATTLEGROUND_LEADER",
+    "RESTRICTED"
 }
 
 for _, chatType in pairs(CHAT_TYPES) do

@@ -1,8 +1,8 @@
-## Interface: 100207
+## Interface: 100207,110000,110002
 ## Title: |cff18f24bURL Clicker|r
 ## Author: Mereci
 ## Notes: Makes URL clickable
-## Version: 1.0.2
+## Version: 1.0.3
 ## IconTexture: 4038107
 
 URLClicker.lua
