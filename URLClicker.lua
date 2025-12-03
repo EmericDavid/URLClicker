@@ -66,8 +66,7 @@ URLClickerBox.editBox:SetAutoFocus(true)
 URLClickerBox.editBox:SetFontObject(GameFontHighlight)
 URLClickerBox.editBox:SetScript("OnEscapePressed", function() URLClickerBox:Hide() end)
 
--- Safe hook for ChatFrame_OnHyperlinkShow
-local function URLClicker_OnHyperlinkShow(self, link, text, button)
+local function URLClicker_OnHyperlinkClick(self, link, text, button)
     if string.sub(link, 1, 3) == "url" then
         local url = string.sub(link, 5)
         URLClickerBox:Show()
@@ -76,7 +75,28 @@ local function URLClicker_OnHyperlinkShow(self, link, text, button)
     end
 end
 
-hooksecurefunc("ChatFrame_OnHyperlinkShow", URLClicker_OnHyperlinkShow)
+-- Global handler for all chat hyperlinks
+hooksecurefunc("SetItemRef", function(link, text, button, chatFrame)
+    if type(link) == "string" and string.sub(link, 1, 3) == "url" then
+        local url = string.sub(link, 5)
+        URLClickerBox:Show()
+        URLClickerBox.editBox:SetText(url)
+        URLClickerBox.editBox:HighlightText()
+    end
+end)
+
+
+for i = 1, NUM_CHAT_WINDOWS do
+    local frame = _G["ChatFrame"..i]
+    if frame then
+        if frame.SetHyperlinksEnabled then
+            frame:SetHyperlinksEnabled(true)
+        end
+        if frame.HookScript then
+            frame:HookScript("OnHyperlinkClick", URLClicker_OnHyperlinkClick)
+        end
+    end
+end
 
 local CHAT_TYPES = {
     "SYSTEM",
