@@ -1,8 +1,8 @@
-## Interface: 110205
+## Interface: 110207
 ## Title: |cff18f24bURL Clicker|r
 ## Author: Mereci
 ## Notes: Makes URL clickable in chat
-## Version: 1.0.5
+## Version: 1.1.0
 ## IconTexture: 4038107
 ## Category-enUS: User Interface
 ## Category-deDE: Benutzerinterface
@@ -17,5 +17,6 @@
 ## Category-zhTW: 使用者介面
 
 URLClicker.lua
+
 
 
